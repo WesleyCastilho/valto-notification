@@ -2,7 +2,6 @@ package notification
 
 import (
 	"crypto/sha256"
-	"encoding/json"
 	"errors"
 	"net/url"
 	"os"
@@ -49,17 +48,23 @@ func LoadConfig() (Config, error) {
 			return c, errors.New("SEND_INTERVAL must be between 1s and 1m")
 		}
 	}
-	path := os.Getenv("CLIENTS_CONFIG_FILE")
-	if path == "" {
-		return c, errors.New("CLIENTS_CONFIG_FILE is required")
+	evolution := Evolution{
+		URL: strings.TrimSpace(os.Getenv("EVOLUTION_API_URL")),
+		APIKey: os.Getenv("EVOLUTION_API_KEY"),
+		Instance: strings.TrimSpace(os.Getenv("EVOLUTION_INSTANCE_NAME")),
 	}
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return c, errors.New("cannot read CLIENTS_CONFIG_FILE")
+	if evolution.URL == "" || evolution.APIKey == "" || evolution.Instance == "" {
+		return c, errors.New("EVOLUTION_API_URL, EVOLUTION_API_KEY and EVOLUTION_INSTANCE_NAME are required")
 	}
-	if err = json.Unmarshal(data, &c.Tenants); err != nil {
-		return c, errors.New("invalid clients configuration JSON")
+	clientID := os.Getenv("CLIENT_ID")
+	if clientID == "" {
+		clientID = "bunker"
 	}
+	clientKey := os.Getenv("VALTO_API_KEY")
+	if clientKey == "" {
+		clientKey = evolution.APIKey
+	}
+	c.Tenants = []Tenant{{ID: clientID, APIKey: clientKey, Evolution: evolution}}
 	if err = validateTenants(c.Tenants); err != nil {
 		return c, err
 	}
