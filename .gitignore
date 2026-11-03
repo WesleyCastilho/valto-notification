@@ -1,0 +1,5 @@
+.env
+clients.json
+*.exe
+coverage.out
+bin/
