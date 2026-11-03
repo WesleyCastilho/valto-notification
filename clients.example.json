@@ -1,0 +1,11 @@
+[
+  {
+    "id": "bunker",
+    "api_key": "GENERATE_A_UNIQUE_VALTO_CLIENT_KEY_WITH_32_OR_MORE_CHARACTERS",
+    "evolution": {
+      "url": "https://evolution.rigora.com.br",
+      "api_key": "SET_THE_EVOLUTION_KEY_IN_THE_PRIVATE_CLIENTS_FILE",
+      "instance": "Valto"
+    }
+  }
+]
