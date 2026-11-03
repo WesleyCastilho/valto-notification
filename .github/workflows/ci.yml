@@ -32,13 +32,6 @@ jobs:
           go-version: '1.25.x'
       - run: go mod tidy
       - run: gofmt -w cmd internal sdk
-      - name: Export normalized source for extraction review
-        run: |
-          python3 - <<'PY'
-          import json, pathlib
-          paths = sorted(pathlib.Path('.').glob('**/*.go')) + [pathlib.Path('go.mod'), pathlib.Path('go.sum')]
-          print('VALTO_NORMALIZED_SOURCE=' + json.dumps([{'path': str(p), 'content': p.read_text()} for p in paths], separators=(',', ':')))
-          PY
       - run: go vet ./...
       - run: go test -race -count=1 -coverprofile=coverage.out ./...
       - run: go build ./cmd/server
