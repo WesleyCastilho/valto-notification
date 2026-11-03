@@ -18,13 +18,15 @@ API independente de notificações, extraída do transporte Evolution utilizado 
 
 ## Subir para homologação
 
-1. Copie `.env.example` para `.env` e `clients.example.json` para `clients.json`.
-2. Configure uma **base PostgreSQL exclusiva da Valto** e as credenciais reais no arquivo privado de clientes. Gere uma chave da Valto diferente da chave da Evolution.
+1. Copie `.env.example` para `.env`, ou configure as mesmas variáveis diretamente no EasyPanel.
+2. Configure `DATABASE_URL` e as variáveis existentes `EVOLUTION_API_URL`, `EVOLUTION_API_KEY` e `EVOLUTION_INSTANCE_NAME`. A configuração é lida exclusivamente do ambiente.
 3. Mantenha `DELIVERY_ENABLED=false` durante a homologação inicial. Isso permite enfileirar e consultar sem chamar o envio da Evolution.
 4. Execute `docker compose up --build -d`, ou siga [EasyPanel](docs/DEPLOYMENT.md).
 5. Confira `/healthz`, `/readyz` e o diagnóstico autenticado `/v1/provider/health`.
 
-O exemplo de banco é somente de desenvolvimento local. Não copie a conexão do Bunker para a Valto. `clients.json`, `.env` e chaves reais são excluídos do Git e da imagem.
+O exemplo de banco é somente de desenvolvimento local. A Valto usa sua própria base. Não é necessário criar ou montar `clients.json`; `CLIENTS_CONFIG_FILE` não é lido. `.env` e chaves reais ficam fora do Git e da imagem.
+
+O cliente padrão é `bunker`. A autenticação da API Valto reutiliza `EVOLUTION_API_KEY` por padrão, conforme a configuração existente. `CLIENT_ID` e `VALTO_API_KEY` são substituições opcionais, sem exigir novos valores para iniciar.
 
 ## Contrato da API
 
